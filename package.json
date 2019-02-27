@@ -1,0 +1,32 @@
+{
+  "name": "springs",
+  "version": "0.0.0",
+  "description": "A spring animation system for Elm",
+  "main": "built/bundle.js",
+  "scripts": {
+    "test": "elm-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/tad-lispy/elm-springs.git"
+  },
+  "keywords": [
+    "Elm",
+    "Spring",
+    "Animation",
+    "Hooke",
+    "Physics",
+    "Oscilator"
+  ],
+  "author": "Tadeusz Lazurski (https://www.lazurski.pl/)",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://gitlab.com/tad-lispy/elm-springs/issues"
+  },
+  "homepage": "https://gitlab.com/tad-lispy/elm-springs#readme",
+  "devDependencies": {
+    "elm": "^0.19.0-bugfix6",
+    "elm-live": "^3.4.0",
+    "elm-test": "^0.19.0-rev5"
+  }
+}
