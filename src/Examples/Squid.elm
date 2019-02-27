@@ -35,6 +35,7 @@ main =
 type alias Model =
     { x : Spring
     , y : Spring
+    , hurt : Spring
     , state : GameState
     }
 
@@ -64,6 +65,7 @@ init flags =
       , y =
             Spring.create strength dampness
                 |> Spring.setTarget 200
+      , hurt = Spring.create 40 2
       , state = Start
       }
     , Cmd.none
@@ -111,6 +113,7 @@ view model =
         |> Element.layout
             [ Element.width Element.fill
             , Element.height Element.fill
+            , Background.color (Element.rgb (Spring.value model.hurt) 0.2 0.6)
             , Events.onClick Click
             , Element.css "user-select" "none"
             , Element.css "-webkit-user-select" "none"
@@ -123,6 +126,8 @@ view model =
                 |> Element.el
                     [ Element.centerX
                     , Element.centerY
+                    , Font.color (Element.rgb 1 1 1)
+                    , Font.size 36
                     ]
                 |> Element.behindContent
             ]
@@ -136,13 +141,21 @@ update msg model =
                 if model.state == Running then
                     ( { model
                         | state = Over
+                        , hurt =
+                            model.hurt
+                                |> Spring.setTarget 0.6
                       }
                     , Cmd.none
                     )
 
                 else
                     -- State must be Start or Over. Keep it that way.
-                    ( model, Cmd.none )
+                    ( { model
+                        | hurt =
+                            Spring.animate delta model.hurt
+                      }
+                    , Cmd.none
+                    )
 
             else
                 ( { model
@@ -191,7 +204,7 @@ subscriptions model =
     --
     --
     --   else
-    [ if model.state == Over then
+    [ if model.state == Over && Spring.atRest model.hurt then
         Sub.none
 
       else
