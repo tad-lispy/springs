@@ -64,7 +64,11 @@ init flags =
         dampness =
             1
     in
-    ( { oscillator = Spring.create strength dampness
+    ( { oscillator =
+            Spring.create
+                { strength = strength
+                , dampness = dampness
+                }
       , tape = []
       , clock = 0.0
       , start = start
@@ -123,9 +127,10 @@ update msg model =
         Run ->
             ( { model
                 | oscillator =
-                    model.dampness
-                        |> square
-                        |> Spring.create model.strength
+                    { dampness = model.dampness
+                    , strength = model.strength
+                    }
+                        |> Spring.create
                         |> Spring.jumpTo model.start
               }
             , Cmd.none
@@ -141,21 +146,7 @@ subscriptions model =
         Browser.Events.onAnimationFrameDelta Animate
 
 
-{-| Square and round a number. Used for setting and displaing dumpness.
--}
-square : Float -> Float
-square number =
-    let
-        precision =
-            1000
-    in
-    (number ^ 2)
-        |> (*) precision
-        |> floor
-        |> toFloat
-        |> (\n -> n / precision)
-
-
+ui : Model -> Element Msg
 ui model =
     [ graph model
     , controls model
@@ -273,7 +264,6 @@ controls model =
         { onChange = SetDampness
         , label =
             model.dampness
-                |> square
                 |> String.fromFloat
                 |> (++) "dampness = "
                 |> Element.text

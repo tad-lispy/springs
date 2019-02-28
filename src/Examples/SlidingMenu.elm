@@ -59,7 +59,11 @@ init flags =
         dampness =
             4
     in
-    ( { menuSpring = Spring.create strength (square dampness)
+    ( { menuSpring =
+            Spring.create
+                { strength = strength
+                , dampness = dampness
+                }
       , menuWidth = 400
       , strength = strength
       , dampness = dampness
@@ -97,13 +101,14 @@ update msg model =
             , Cmd.none
             )
 
-        SetDampness factor ->
+        SetDampness dampness ->
             ( { model
-                | dampness = factor
+                | dampness = dampness
                 , menuSpring =
-                    factor
-                        |> square
-                        |> Spring.create model.strength
+                    { dampness = dampness
+                    , strength = model.strength
+                    }
+                        |> Spring.create
                         |> Spring.setTarget (toFloat model.menuWidth)
                         |> Spring.jumpTo (toFloat model.menuWidth)
               }
@@ -114,9 +119,10 @@ update msg model =
             ( { model
                 | strength = strength
                 , menuSpring =
-                    model.dampness
-                        |> square
-                        |> Spring.create strength
+                    { dampness = model.dampness
+                    , strength = strength
+                    }
+                        |> Spring.create
                         |> Spring.setTarget (toFloat model.menuWidth)
                         |> Spring.jumpTo (toFloat model.menuWidth)
               }
@@ -148,21 +154,7 @@ subscriptions model =
         Browser.Events.onAnimationFrameDelta Animate
 
 
-{-| Square and round a number. Used for setting and displaing dumpness.
--}
-square : Float -> Float
-square number =
-    let
-        precision =
-            1000
-    in
-    (number ^ 2)
-        |> (*) precision
-        |> floor
-        |> toFloat
-        |> (\n -> n / precision)
-
-
+ui : a -> Element msg
 ui model =
     Html.iframe
         [ Html.Attributes.style "width" "100%"
@@ -237,6 +229,7 @@ menu model =
             ]
 
 
+explanation : Element msg
 explanation =
     [ Element.text "⚠️ Note that setting values to their extreme may cause very weird (or even unpleasant) effects. Be careful with dampness - if it's low, the menu will wobble for a long time and may cause motion sickness or even epillepsy. To develop some intuition about these settings, try "
     , Element.link [ Font.underline ] { url = "Oscillator.html", label = Element.text "the oscillator example" }
@@ -265,7 +258,6 @@ controls model =
         { onChange = SetDampness
         , label =
             model.dampness
-                |> square
                 |> String.fromFloat
                 |> (++) "dampness = "
                 |> Element.text

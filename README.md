@@ -26,29 +26,25 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    let
-        strength =
-            100
-
-        dampness =
-            5
-    in
     ( { size =
-            Spring.create strength dampness
+            Spring.create
+                { strength = 100
+                , dampness = 2
+                }
                 |> Spring.setTarget 100
       }
     , Cmd.none
     )
 ```
 
-The stronger the spring, the faster it will go, but also there will be more oscillation cycles (it will wobble more). Eventually it should come to rest. How soon it will stop depends on a damping ratio (I call it `dampness` for short). Good values for dampness are between 0 (it will oscillate forever) and 25 (it will stop pretty much as soon as it reaches the target). So these two parameters together dictate the motion characteristic of a spring. You can experiment with them here: https://tad-lispy.gitlab.io/elm-springs/Oscillator.html
+The stronger the spring, the faster it will go, but also there will be more oscillation cycles (it will wobble more). Eventually it should come to a rest. How soon it will stop depends on a damping ratio (I call it `dampness` for short). Good values for dampness are between 0 (it will oscillate forever) and 5 (it will stop pretty much as soon as it reaches the target). So these two parameters together dictate the motion characteristic of a spring. You can experiment with them here: https://tad-lispy.gitlab.io/elm-springs/Oscillator.html
 
 Spring has a target value towards which it will move. Initially it's 0, so if you want another target, set it explicitly like in the example above.
 
 Initial value of a spring is also 0. If you want the spring to immediately jump to a certain value, use `Spring.jumpTo : Float -> Spring -> Spring`. It's often used in `init` or if you want to abruptly terminate the animation. Often you will set the target and jump to it at the same time, like this:
 
 ```elm
-Spring.create strength dampness
+Spring.create { strength = strength, dampness = dampness}
     |> Spring.setTarget 100
     |> Spring.jumpTo 100
 ```

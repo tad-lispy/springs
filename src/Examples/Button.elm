@@ -29,15 +29,13 @@ type Msg
 
 init : () -> ( Model, Cmd Msg )
 init () =
-    let
-        strength =
-            100
-
-        dumpness =
-            5
-    in
     ( { size =
-            Spring.create strength dumpness
+            Spring.create
+                { strength =
+                    100
+                , dampness =
+                    2
+                }
                 |> Spring.setTarget 100
       }
     , Cmd.none

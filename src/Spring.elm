@@ -35,6 +35,8 @@ Let's say we are creating a program that animates the position of an element tow
         }
 
 -}
+
+
 type Spring
     = Spring
         { strength : Float
@@ -56,18 +58,20 @@ Let's say we are creating a program that animates the position of an element tow
 
     init : Flags -> ( Model, Cmd msg )
     init flags =
-        ( { x = Spring.create 20 20
-          , y = Spring.create 20 20
+        ( { x = Spring.create { strength = 20, dampness = 4.5 }
+          , y = Spring.create { strength = 20, dampness = 4.5 }
           }
         , Cmd.none
         )
 
+Note that dampness is a logarythmic value - dampness of 5 translates to damping retion 25 higher than dampness of 1.
+
 -}
-create : Float -> Float -> Spring
-create strength dampness =
+create : { strength : Float, dampness : Float } -> Spring
+create { strength, dampness } =
     Spring
         { strength = strength
-        , dampness = dampness
+        , dampness = dampness ^ 2
         , target = 0
         , value = 0
         , velocity = 0
