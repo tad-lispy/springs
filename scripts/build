@@ -11,6 +11,10 @@ do
   name="$(basename "${input}" ".elm")"
   output="public/${name}.html"
   npx elm make "${input}" --output "${output}" --optimize
+
+  # Insert Viewport meta tag for better mobile experience
+  tag='<meta name="viewport" content="width=device-width, initial-scale=0.75">'
+  sed -i "s|</head>|  ${tag}\n</head>|" "${output}" 
 done
 
 cp index.html public/
