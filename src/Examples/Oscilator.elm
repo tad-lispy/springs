@@ -1,4 +1,4 @@
-module Examples.Oscilator exposing
+module Examples.Oscillator exposing
     ( Model
     , Msg
     , init
@@ -37,7 +37,7 @@ main =
 
 
 type alias Model =
-    { oscilator : Spring
+    { oscillator : Spring
     , tape : List ( Float, Float, Bool )
     , clock : Float
 
@@ -64,7 +64,7 @@ init flags =
         dampness =
             1
     in
-    ( { oscilator = Spring.create strength dampness
+    ( { oscillator = Spring.create strength dampness
       , tape = []
       , clock = 0.0
       , start = start
@@ -97,12 +97,12 @@ update msg model =
     case msg of
         Animate delta ->
             ( { model
-                | oscilator = Spring.animate delta model.oscilator
+                | oscillator = Spring.animate delta model.oscillator
                 , clock = model.clock + delta
                 , tape =
                     ( model.clock
-                    , Spring.value model.oscilator
-                    , Spring.atRest model.oscilator
+                    , Spring.value model.oscillator
+                    , Spring.atRest model.oscillator
                     )
                         :: model.tape
                         |> List.take 6000
@@ -122,7 +122,7 @@ update msg model =
 
         Run ->
             ( { model
-                | oscilator =
+                | oscillator =
                     model.dampness
                         |> square
                         |> Spring.create model.strength
@@ -134,7 +134,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    if Spring.atRest model.oscilator then
+    if Spring.atRest model.oscillator then
         Sub.none
 
     else
@@ -186,12 +186,12 @@ graph model =
                 [ Svg.Attributes.r "7"
                 , Html.Attributes.style "filter" "blur(2px)"
                 , Svg.Attributes.fill <|
-                    if Spring.atRest model.oscilator then
+                    if Spring.atRest model.oscillator then
                         colors.rest
 
                     else
                         colors.trace
-                , model.oscilator
+                , model.oscillator
                     |> Spring.value
                     |> Transformations.Translate 0
                     |> Transformations.toString

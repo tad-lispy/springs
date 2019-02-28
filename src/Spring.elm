@@ -9,7 +9,7 @@ module Spring exposing
     , value
     )
 
-{-| A rough model of a mass attached to a spring, as described by [Hooke's law](https://en.wikipedia.org/wiki/Hooke's_law). Good for making smooth and organic looking animations or modeling oscilating values (e.g. emotions). High physical accuracy is not a priority - performance and API is more important.
+{-| A rough model of a mass attached to a spring, as described by [Hooke's law](https://en.wikipedia.org/wiki/Hooke's_law). Good for making smooth and organic looking animations or modeling oscillating values (e.g. emotions). High physical accuracy is not a priority - performance and API is more important.
 -}
 
 
@@ -19,7 +19,7 @@ Value represents the current position of the mass. It is re-calculated (together
 
 Strength regulates how strongly the spring pulls toward target. It is also called the stiffness but I find the former term more intuitive.
 
-Dampness is how resistant the spring is to change in it's stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscilator (but it's not advise to depend on it's accuracy).
+Dampness is how resistant the spring is to change in it's stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advise to depend on it's accuracy).
 
 Target is the value toward which the mass is pulled. Typically the spring will start in an equilibrium position (i.e. value == target) and later on (due to an event) the target will be changed and the value will follow according to the strength and dampness of the spring.
 
