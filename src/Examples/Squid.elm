@@ -137,33 +137,39 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Animate delta ->
-            if Spring.atRest model.x && Spring.atRest model.y then
-                if model.state == Running then
+            case model.state of
+                Start ->
                     ( { model
-                        | state = Over
-                        , hurt =
-                            model.hurt
-                                |> Spring.setTarget 0.6
+                        | x = Spring.animate delta model.x
+                        , y = Spring.animate delta model.y
                       }
                     , Cmd.none
                     )
 
-                else
-                    -- State must be Start or Over. Keep it that way.
+                Running ->
+                    if Spring.atRest model.x && Spring.atRest model.y then
+                        -- Spring got the player!
+                        ( { model
+                            | state = Over
+                            , hurt = Spring.setTarget 0.6 model.hurt
+                          }
+                        , Cmd.none
+                        )
+
+                    else
+                        ( { model
+                            | x = Spring.animate delta model.x
+                            , y = Spring.animate delta model.y
+                          }
+                        , Cmd.none
+                        )
+
+                Over ->
                     ( { model
-                        | hurt =
-                            Spring.animate delta model.hurt
+                        | hurt = Spring.animate delta model.hurt
                       }
                     , Cmd.none
                     )
-
-            else
-                ( { model
-                    | x = Spring.animate delta model.x
-                    , y = Spring.animate delta model.y
-                  }
-                , Cmd.none
-                )
 
         Move x y ->
             ( { model
@@ -200,11 +206,19 @@ mouseDecoder =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    -- [ if Spring.atRest model.x && Spring.atRest model.y then
-    --
-    --
-    --   else
-    [ if model.state == Over && Spring.atRest model.hurt then
+    let
+        calm =
+            case model.state of
+                Start ->
+                    Spring.atRest model.x && Spring.atRest model.y
+
+                Running ->
+                    False
+
+                Over ->
+                    Spring.atRest model.hurt
+    in
+    [ if calm then
         Sub.none
 
       else
