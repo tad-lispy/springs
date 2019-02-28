@@ -168,6 +168,7 @@ ui model =
         [ Html.Attributes.style "width" "100%"
         , Html.Attributes.style "height" "100%"
         , Html.Attributes.style "border" "none"
+        , Html.Attributes.sandbox ""
         , Html.Attributes.src "https://en.wikipedia.org/wiki/Hooke's_law"
         ]
         []
