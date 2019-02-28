@@ -1,0 +1,17 @@
+
+image: node:slim
+
+before_script:
+  - npm install
+
+pages:
+  stage: deploy
+  script:
+    - scripts/build
+
+  artifacts:
+    paths:
+      - public
+
+  only:
+    - master

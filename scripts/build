@@ -1,0 +1,16 @@
+#! /usr/bin/env bash
+
+set -euo pipefail
+
+
+rm -rf public/
+mkdir -p public/
+
+for input in src/Examples/*.elm
+do
+  name="$(basename "${input}" ".elm")"
+  output="public/${name}.html"
+  npx elm make "${input}" --output "${output}" --optimize
+done
+
+cp index.html public/
