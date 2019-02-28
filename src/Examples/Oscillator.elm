@@ -219,6 +219,20 @@ graph model =
                 ]
                 []
 
+        band value =
+            Svg.line
+                [ Transformations.Translate 0 value
+                    |> Transformations.toString
+                    |> Svg.Attributes.transform
+                , Svg.Attributes.y1 "0"
+                , Svg.Attributes.y2 "0"
+                , Svg.Attributes.x1 "0"
+                , Svg.Attributes.x2 "10000"
+                , Svg.Attributes.stroke colors.marks
+                , Svg.Attributes.strokeDasharray "16 16"
+                ]
+                []
+
         colors =
             { background = "hsl(200, 60%, 10%)"
             , rest = "hsl(200, 100%, 70%)"
@@ -230,6 +244,8 @@ graph model =
         |> List.map trace
         |> (++) marks
         |> (::) head
+        |> (::) (band model.start)
+        |> (::) (band -model.start)
         |> Svg.svg
             [ Svg.Attributes.viewBox "-20 -500 1000 1000"
             , Html.Attributes.style "width" "100%"
