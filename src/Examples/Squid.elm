@@ -57,15 +57,25 @@ init flags =
             100
 
         dampness =
-            10
+            3
     in
     ( { x =
-            Spring.create strength dampness
+            Spring.create
+                { strength = strength
+                , dampness = dampness
+                }
                 |> Spring.setTarget 200
       , y =
-            Spring.create strength dampness
+            Spring.create
+                { strength = strength
+                , dampness = dampness
+                }
                 |> Spring.setTarget 200
-      , hurt = Spring.create 40 2
+      , hurt =
+            Spring.create
+                { strength = 40
+                , dampness = 1.3
+                }
       , state = Start
       }
     , Cmd.none
