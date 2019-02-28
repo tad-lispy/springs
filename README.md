@@ -141,6 +141,12 @@ That's really all there is to it. For inspiration take a look at example program
 
 ## Examples
 
+  - [Button][]
+    <small>[source code](src/Examples/Button.elm)</small>
+
+    Complete code of the program discussed above, including the come-back behavior.
+
+
   - [Sliding menu][]
     <small>[source code](src/Examples/SlidingMenu.elm)</small>
 
@@ -167,7 +173,7 @@ Thanks for your interest in this library. Feel free to open an issue or merge re
 >   - [ ] Tests (e.g. error rate)
 >   - [ ] Publish
 
-
+[Button]: https://tad-lispy.gitlab.io/elm-springs/Button.html
 [Sliding menu]: https://tad-lispy.gitlab.io/elm-springs/SlidingMenu.html
 [Oscillometer]: https://tad-lispy.gitlab.io/elm-springs/Oscillator.html
 [Squid game]: https://tad-lispy.gitlab.io/elm-springs/Squid.html)
