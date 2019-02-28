@@ -116,7 +116,7 @@ update msg model =
                 , menuSpring =
                     model.dampness
                         |> square
-                        |> Spring.create model.strength
+                        |> Spring.create strength
                         |> Spring.setTarget (toFloat model.menuWidth)
                         |> Spring.jumpTo (toFloat model.menuWidth)
               }
