@@ -107,6 +107,13 @@ view model =
 
                 Over ->
                     "The squid gotcha! Click to restart."
+
+        clickDecoder =
+            if model.state == Over then
+                Decode.succeed Click
+
+            else
+                moveDecoder
     in
     model
         |> ui
@@ -114,7 +121,9 @@ view model =
             [ Element.width Element.fill
             , Element.height Element.fill
             , Background.color (Element.rgb (Spring.value model.hurt) 0.2 0.6)
-            , Events.onClick Click
+            , clickDecoder
+                |> Html.Events.on "click"
+                |> Element.htmlAttribute
             , Element.css "user-select" "none"
             , Element.css "-webkit-user-select" "none"
             , Element.css "-ms-user-select" "none"
@@ -197,8 +206,8 @@ update msg model =
                 ( model, Cmd.none )
 
 
-mouseDecoder : Decoder Msg
-mouseDecoder =
+moveDecoder : Decoder Msg
+moveDecoder =
     Decode.map2 Move
         (Decode.field "clientX" Decode.float)
         (Decode.field "clientY" Decode.float)
@@ -223,6 +232,6 @@ subscriptions model =
 
       else
         Browser.Events.onAnimationFrameDelta Animate
-    , Browser.Events.onMouseMove mouseDecoder
+    , Browser.Events.onMouseMove moveDecoder
     ]
         |> Sub.batch
