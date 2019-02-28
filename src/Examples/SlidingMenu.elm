@@ -210,7 +210,14 @@ menu model =
             2 * model.menuWidth + handleWidth
     in
     [ Element.el [ Element.width (Element.px model.menuWidth) ] Element.none
-    , controls model
+    , [ controls model
+      , explanation
+      ]
+        |> Element.column
+            [ Element.width Element.fill
+            , Element.height Element.fill
+            , Element.padding 20
+            ]
     , handle
     ]
         |> Element.row
@@ -227,6 +234,17 @@ menu model =
                 |> Spring.value
                 |> (\value -> (2 * toFloat model.menuWidth) - value)
                 |> Element.moveLeft
+            ]
+
+
+explanation =
+    [ Element.text "⚠️ Note that setting values to their extreme may cause very weird (or even unpleasant) effects. Be careful with dampness - if it's low, the menu will wobble for a long time and may cause motion sickness or even epillepsy. To develop some intuition about these settings, try "
+    , Element.link [ Font.underline ] { url = "Oscillator.html", label = Element.text "the oscillator example" }
+    , Element.text "."
+    ]
+        |> Element.paragraph
+            [ Font.size 18
+            , Font.justify
             ]
 
 
@@ -286,6 +304,6 @@ controls model =
     ]
         |> Element.column
             [ Element.width Element.fill
-            , Element.padding 20
             , Element.spacing 20
+            , Element.alignTop
             ]
