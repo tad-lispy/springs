@@ -6,11 +6,24 @@ before_script:
 
 demos:
   stage: build
+
   script:
     - scripts/build
 
+  cache:
+    paths:
+      - demos/public
+
 pages:
   stage: deploy
+  script:
+    - mv demos/public ./public
+
+  cache:
+    paths:
+      - demos/public
+    policy:
+      pull
 
   artifacts:
     paths:

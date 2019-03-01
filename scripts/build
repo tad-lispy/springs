@@ -21,6 +21,3 @@ done
 cp index.html public/
 
 cd -
-
-# For GitLab pages to pick it up
-mv demos/public ./public
