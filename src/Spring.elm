@@ -9,7 +9,7 @@ module Spring exposing
     , atRest
     )
 
-{-| This module can be used to create and track oscillating values. A value like that will changing over time in a way similar to a center of mass attached to an anchored spring. See [the ReadMe](./) for an overview, demos and use cases.
+{-| This module can be used to create and track oscillating values. A value like that will change over time in a way similar to a center of mass attached to an anchored spring. See [the ReadMe](./) for an overview, demos and use cases.
 
 
 # Type
@@ -93,7 +93,7 @@ create { strength, dampness } =
 
 {-| Set a new target (relaxed value) for the spring.
 
-The current value and it's velocity will be preserved, so the spring will smoothly transition it's movement. Typically you would set a target in response to an event, e.g.:
+The current value and its velocity will be preserved, so the spring will smoothly transition its movement. Typically you would set a target in response to an event, e.g.:
 
     update : Msg -> Model -> ( Model, Cmd Msg )
     update msg model =
@@ -225,7 +225,7 @@ target (Spring this) =
 
 {-| Check if the spring is at rest
 
-It indicates that the spring has reached it's target and no motion is going on. Maybe you want to unsubscribe from animation frames? Or remove an element?
+It indicates that the spring has reached its target and no motion is going on. Maybe you want to unsubscribe from animation frames? Or remove an element?
 
     subscriptions : Model -> Sub Msg
     subscriptions model =
