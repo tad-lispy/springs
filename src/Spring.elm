@@ -1,33 +1,48 @@
 module Spring exposing
     ( Spring
-    , animate
-    , atRest
     , create
-    , jumpTo
     , setTarget
-    , target
+    , animate
+    , jumpTo
     , value
+    , target
+    , atRest
     )
 
-{-| A rough model of a mass attached to a spring, as described by [Hooke's law](https://en.wikipedia.org/wiki/Hooke's_law). Good for making smooth and organic looking animations or modelling oscillating values (e.g. emotions). High physical accuracy is not a priority - performance and API is more important.
+{-| This module can be used to create and track oscillating values. A value like that will changing over time in a way similar to a center of mass attached to an anchored spring. See [the ReadMe](./) for an overview, demos and use cases.
+
+
+# Type
+
+@docs Spring
+
+
+# Constructor
+
+@docs create
+
+
+# Control
+
+@docs setTarget
+
+
+# Update
+
+@docs animate
+@docs jumpTo
+
+
+# Query
+
+@docs value
+@docs target
+@docs atRest
+
 -}
 
 
-{-| A model of mass attached to a spring. The spring is anchored to a target. The mass is constant (1).
-
-Value represents the current position of the mass. It is re-calculated (together with velocity) by animate function.
-
-Strength regulates how strongly the spring pulls toward target. It is also called the stiffness but I find the former term more intuitive.
-
-Dampness is how resistant the spring is to change in it's stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advise to depend on it's accuracy).
-
-Target is the value toward which the mass is pulled. Typically the spring will start in an equilibrium position (i.e. value == target) and later on (due to an event) the target will be changed and the value will follow according to the strength and dampness of the spring.
-
-Value is where the mass is. It can be extracted from the spring using `value` function and set (with `setValue` function - rarely useful).
-
-Velocity is an internal property that cannot be directly modified or read.
-
-Let's say we are creating a program that animates the position of an element toward last click position.
+{-| Let's say we are creating a program that animates the position of an element towards the last click position.
 
     type alias Model =
         { x : Spring
@@ -35,8 +50,6 @@ Let's say we are creating a program that animates the position of an element tow
         }
 
 -}
-
-
 type Spring
     = Spring
         { strength : Float
@@ -47,7 +60,7 @@ type Spring
         }
 
 
-{-| Create a spring in an equilibrium state.
+{-| Create a spring with the value and target set to `0`.
 
 Let's say we are creating a program that animates the position of an element toward last click position.
 
@@ -64,7 +77,7 @@ Let's say we are creating a program that animates the position of an element tow
         , Cmd.none
         )
 
-Note that dampness is a logarythmic value - dampness of 5 translates to damping retion 25 higher than dampness of 1.
+Note that the `dampness` is a logarythmic value: `dampness = 5` results in damping ratio 25 times higher than `dampness = 1`.
 
 -}
 create : { strength : Float, dampness : Float } -> Spring
@@ -80,7 +93,7 @@ create { strength, dampness } =
 
 {-| Set a new target (relaxed value) for the spring.
 
-The current value and it's velocity will remain the same. Typically you would set a target in response to an event, e.g.:
+The current value and it's velocity will be preserved, so the spring will smoothly transition it's movement. Typically you would set a target in response to an event, e.g.:
 
     update : Msg -> Model -> ( Model, Cmd Msg )
     update msg model =
@@ -95,15 +108,15 @@ The current value and it's velocity will remain the same. Typically you would se
 
 -}
 setTarget : Float -> Spring -> Spring
-setTarget target_ (Spring spring) =
+setTarget newTarget (Spring spring) =
     Spring
         { spring
             | target =
-                target_
+                newTarget
         }
 
 
-{-| Update the spring
+{-| Gently update the internal state of the spring
 
 Typically you would do it in response to an animation frame message, like this:
 
@@ -122,12 +135,14 @@ Typically you would do it in response to an animation frame message, like this:
                 , Cmd.none
                 )
 
+> Note: that if the frame rate is low, the time passage experienced by the spring will deviate from the real time. See the comment in source code for more details.
+
 -}
 animate : Float -> Spring -> Spring
-animate delta ((Spring spring) as this) =
-    if atRest this then
+animate delta ((Spring this) as spring) =
+    if atRest spring then
         {- If it's in equilibrium, then let's just skip the whole calculation. Be lazy. -}
-        Spring spring
+        spring
 
     else
         let
@@ -139,45 +154,41 @@ animate delta ((Spring spring) as this) =
                 min delta 32 / 1000
 
             stretch =
-                spring.target - spring.value
+                this.target - this.value
 
             force =
-                stretch * spring.strength
+                stretch * this.strength
 
             damping =
-                spring.velocity * spring.dampness
+                this.velocity * this.dampness
 
             acceleration =
                 time * (force - damping)
 
             velocity =
-                spring.velocity + acceleration
+                this.velocity + acceleration
 
-            value_ =
-                spring.value + (velocity * time)
+            newValue =
+                this.value + (velocity * time)
         in
         if
-            (abs (spring.value - spring.target) < 0.05)
-                && (abs spring.velocity < 0.05)
+            (abs (this.value - this.target) < 0.05)
+                && (abs this.velocity < 0.05)
         then
-            {- In reality the spring never stops vibrating, but at some point the vibration is lost in the background noise (uncertainity principle). In our case it's also a wasted computation. Let's just say that it is at rest already. -} {- Snap to ideal equilibrium -}
-            Spring
-                { spring
-                    | value = spring.target
-                    , velocity = 0
-                }
+            {- In reality the spring never stops vibrating, but at some point the vibration is lost in the background noise. In our case it's also a wasted computation. Let's just say that it is at rest already. -}
+            jumpTo this.target spring
 
         else
             Spring
-                { spring
+                { this
                     | value =
-                        value_
+                        newValue
                     , velocity =
                         velocity
                 }
 
 
-{-| Measure the value of the spring.
+{-| Measure the current value of the spring.
 
 Typically you want to access it in the view function, like this:
 
@@ -194,12 +205,12 @@ Typically you want to access it in the view function, like this:
         ]
         (Element.text "\u{1F991}")
 
-Above we use Elm UI Elements and Attributes, but it's not difficult to implement same behavior using CSS transformations. Spring value is just a `Float`.
+> Above I use [Elm UI](https://package.elm-lang.org/packages/mdgriffith/elm-ui/latest/) Elements and Attributes, but it's not difficult to implement the same behaviour using CSS transformations. The value of a Spring is just a `Float` - you can do with it whatever you need.
 
 -}
 value : Spring -> Float
-value (Spring spring) =
-    spring.value
+value (Spring this) =
+    this.value
 
 
 {-| Get current target of a spring
@@ -208,13 +219,13 @@ Can be useful to see where the spring is going. Maybe you want to display someth
 
 -}
 target : Spring -> Float
-target (Spring spring) =
-    spring.target
+target (Spring this) =
+    this.target
 
 
 {-| Check if the spring is at rest
 
-It indicates that no animation is running. Maybe you want to unsubscribe from animation frames? Or remove an element?
+It indicates that the spring has reached it's target and no motion is going on. Maybe you want to unsubscribe from animation frames? Or remove an element?
 
     subscriptions : Model -> Sub Msg
     subscriptions model =
@@ -226,13 +237,13 @@ It indicates that no animation is running. Maybe you want to unsubscribe from an
 
 -}
 atRest : Spring -> Bool
-atRest (Spring spring) =
-    spring.value == spring.target && spring.velocity == 0.0
+atRest (Spring this) =
+    this.value == this.target && this.velocity == 0.0
 
 
-{-| Forcefully set the value and interrupt the animation.
+{-| Forcefully set the value and interrupt the motion.
 
-It is useful when you set the spring for the first time (e.g. in init function) or you want to reset the animation.
+The target will be preserved, but velocity will be set to 0. It is useful when you set the spring for the first time (e.g. in the `init` function) or you want to reset the animation.
 
     init : Flags -> ( Model, Cmd msg )
     init flags =
@@ -250,9 +261,9 @@ It is useful when you set the spring for the first time (e.g. in init function) 
 
 -}
 jumpTo : Float -> Spring -> Spring
-jumpTo value_ (Spring spring) =
+jumpTo newValue (Spring this) =
     Spring
-        { spring
-            | value = value_
+        { this
+            | value = newValue
             , velocity = 0.0
         }

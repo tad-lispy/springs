@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-
+# Build demos website
+cd demos/
 rm -rf public/
 mkdir -p public/
 
@@ -14,7 +15,9 @@ do
 
   # Insert Viewport meta tag for better mobile experience
   tag='<meta name="viewport" content="width=device-width, initial-scale=0.75">'
-  sed -i "s|</head>|  ${tag}\n</head>|" "${output}" 
+  sed -i "s|</head>|  ${tag}\n</head>|" "${output}"
 done
 
 cp index.html public/
+
+cd -

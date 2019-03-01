@@ -1,8 +1,10 @@
-/elm-stuff
+elm-stuff
 /**/.DS_Store
+/docs.json
 *.swp
 .#*
 /public/
+/demos/public/
 /built/
 /node_modules/
 /src/Playground.elm

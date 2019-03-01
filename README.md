@@ -2,9 +2,37 @@
 
 A rough model of a mass attached to a spring, as described by [Hooke's law](https://en.wikipedia.org/wiki/Hooke's_law). Good for making smooth and organic looking animations or modelling oscillating values (e.g. emotions). High physical accuracy is not a priority - performance and API simplicity is more important.
 
+
+## Demos
+
+  - **[Sliding menu][]**  
+    [source code](demos/src/Examples/SlidingMenu.elm)
+
+    Probably the most practical one at the moment :-)
+
+
+  - **[Oscillometer][]**  
+    [source code](demos/src/Examples/Oscillator.elm)
+
+    A little tool for experimenting with the properties (strength and damping ratio)
+
+
+  - **[Squid game][]**  
+    [source code](demos/src/Examples/Squid.elm)
+
+    A terrifying squid 🦑 Run!
+
+
+  - **[Button][]**  
+    [source code](demos/src/Examples/Button.elm)
+
+    Complete code of the program discussed in [the Use section below](#use), including the come-back behaviour.
+
+
 ## Install
 
 > I plan to release it to packages.elm-lang.org soon. I'd like some feedback first. Will people find it useful?
+
 
 ## Use
 
@@ -68,9 +96,9 @@ wobblyButton model =
         []
 ```
 
-> <small>**Hint**: It's not directly related to Springs, but if you want your animations to run smoothly, try using CSS transformations (like shown above), instead of changing properties like `width`, `height`, `padding`, `margin`, etc. That way the browser won't have to recalculate layout, which is pretty tedious work and will slow your program down.</small>
+> **Hint**: It's not directly related to Springs, but if you want your animations to run smoothly, try using CSS transformations (like shown above), instead of changing properties like `width`, `height`, `padding`, `margin`, etc. That way the browser won't have to recalculate layout, which is pretty tedious work and will slow your program down.
 
-> <small>**Hint 2**: Perhaps you have noticed that there is a funny business going on. First we set the motion of the spring be between 0 and 100 and then we divide the value by 100. Why not just set it between 0 and 1? It's because of the equilibrium detection system. With low targets and values it may consider your spring to be in equilibrium while it's still visibly vibrates, and abruptly stop the motion. You will avoid this kind of visual glitch by working with larger targets, even if it means scaling them down later.</small>
+> **Hint 2**: Perhaps you have noticed that there is a funny business going on. First we set the motion of the spring be between 0 and 100 and then we divide the value by 100. Why not just set it between 0 and 1? It's because of the equilibrium detection system. With low targets and values it may consider your spring to be in equilibrium while it's still visibly vibrates, and abruptly stop the motion. You will avoid this kind of visual glitch by working with larger targets, even if it means scaling them down later.
 
 Let's say that we want to animate the button in response to the `click` event. In the `update` function change the target to the desired final value, like this:
 
@@ -135,39 +163,30 @@ What a splendid come back! Just as it seemed that it's gone forever, it popped b
 
 That's really all there is to it. For inspiration take a look at example programs built using springs.
 
-## Examples
 
-  - [Button][]
-    <small>[source code](src/Examples/Button.elm)</small>
+## Some more theory
 
-    Complete code of the program discussed above, including the come-back behavior.
+A `Spring` value is a model of a mass attached to a spring. The spring is anchored to a moving `target`. The mass is constant (1).
 
+As the spring is animated, it's center of mass moves according to the forces acting on in and its momentum. Because the target can be moved while the mass is in motion, the spring is a good driver for animations that can smoothly transition one into another based on events that happen during the animation.
 
-  - [Sliding menu][]
-    <small>[source code](src/Examples/SlidingMenu.elm)</small>
+The `value` represents the current position of the mass. It is re-calculated (together with velocity) by `animate` function and can be retrived with `value` function.
 
-    Probably the most practical one at the moment :-)
+The `strength` is how strongly the spring pulls toward target. It is also called the stiffness but I find the former term more intuitive.
 
+The `dampness` is how resistant the spring is to change in it's stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advise to depend on it's accuracy).
 
-  - [Oscillometer][]
-    <small>[source code](src/Examples/Oscillator.elm)</small>
+Target is the value toward which the mass is pulled. Typically the spring will start in an equilibrium position (i.e. value == target) and later on (due to an event) the target will be changed and the value will follow according to the strength and dampness of the spring.
 
-    A little tool for experimenting with the properties (strength and damping ratio)
+Value is where the mass is. It can be extracted from the spring using `value` function and set (with `setValue` function - rarely useful).
 
-
-
-  - [Squid game][]
-    <small>[source code](src/Examples/Squid.elm)</small>
-
-    A terrifying squid 🦑 Run!
+Velocity is an internal property that cannot be directly modified or read.
 
 
-Thanks for your interest in this library. Feel free to open an issue or merge request. You can also reach to me on Elm Slack (`@lazurski`) with any questions. I'm usually happy to chat.
+## Thank you!
 
+Thanks for your interest in this library. Feel free to open an issue or merge request. You can also reach to me on Elm Slack (`@lazurski`) with any questions. I'm usually happy to chat. If you build something with it please let me know.
 
-> TODO:
->   - [ ] Tests (e.g. error rate)
->   - [ ] Publish
 
 [Button]: https://tad-lispy.gitlab.io/elm-springs/Button.html
 [Sliding menu]: https://tad-lispy.gitlab.io/elm-springs/SlidingMenu.html
