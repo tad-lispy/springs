@@ -7,25 +7,25 @@ A rough model of a mass attached to a spring, as described by [Hooke's law](http
 ## Demos
 
   - **[Sliding menu][]**  
-    [source code](demos/src/Examples/SlidingMenu.elm)
+    [source code](https://gitlab.com/tad-lispy/elm-springs/blob/master/demos/src/Examples/SlidingMenu.elm)
 
     Probably the most practical one at the moment :-)
 
 
   - **[Oscillometer][]**  
-    [source code](demos/src/Examples/Oscillator.elm)
+    [source code](https://gitlab.com/tad-lispy/elm-springs/blob/master/demos/src/Examples/Oscillator.elm)
 
     A little tool for experimenting with the properties (strength and damping ratio)
 
 
   - **[Squid game][]**  
-    [source code](demos/src/Examples/Squid.elm)
+    [source code](https://gitlab.com/tad-lispy/elm-springs/blob/master/demos/src/Examples/Squid.elm)
 
     A terrifying squid 🦑 Run!
 
 
   - **[Button][]**  
-    [source code](demos/src/Examples/Button.elm)
+    [source code](https://gitlab.com/tad-lispy/elm-springs/blob/master/demos/src/Examples/Button.elm)
 
     Complete code of the program discussed in [the Use section below](#use), including the come-back behaviour.
 
