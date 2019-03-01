@@ -49,7 +49,7 @@ do
 done
 
 git commit -am "Release ${version}"
-git tag -a ${version}
+git tag -a ${version} -m "Release ${version}"
 git push
 git push --tags
 
