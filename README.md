@@ -32,7 +32,9 @@ A rough model of a mass attached to a spring, as described by [Hooke's law](http
 
 ## Install
 
-> I plan to release it to packages.elm-lang.org soon. I'd like some feedback first. Will people find it useful?
+```sh
+elm install tad-lispy/springs
+```
 
 
 ## Use
@@ -169,13 +171,13 @@ That's really all there is to it. For inspiration take a look at example program
 
 A `Spring` value is a model of a mass attached to a spring. The spring is anchored to a moving `target`. The mass is constant (1).
 
-As the spring is animated, its center of mass moves according to the forces acting on in and its momentum. Because the target can be moved while the mass is in motion, the spring is a good driver for animations that can smoothly transition one into another based on events that happen during the animation.
+As the spring is animated, its centre of mass moves according to the forces acting on in and its momentum. Because the target can be moved while the mass is in motion, the spring is a good driver for animations that can smoothly transition one into another based on events that happen during the animation.
 
-The `value` represents the current position of the mass. It is re-calculated (together with velocity) by `animate` function and can be retrived with `value` function.
+The `value` represents the current position of the mass. It is re-calculated (together with velocity) by `animate` function and can be retrieved with `value` function.
 
 The `strength` is how strongly the spring pulls toward target. It is also called the stiffness but I find the former term more intuitive.
 
-The `dampness` is how resistant the spring is to change in its stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advised to depend on its accuracy).
+The `dampness` is how resistant the spring is to change in its stretch (both stretching out and contracting in). If dampness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dampness will increase wobbliness. Setting dampness to 0 will result in something like a sine wave oscillator (but it's not advised to depend on its accuracy).
 
 Target is the value toward which the mass is pulled. Typically the spring will start in an equilibrium position (i.e. value == target) and later on (due to an event) the target will be changed and the value will follow according to the strength and dampness of the spring.
 
@@ -192,4 +194,4 @@ Thanks for your interest in this library. Feel free to open an issue or merge re
 [Button]: https://tad-lispy.gitlab.io/elm-springs/Button.html
 [Sliding menu]: https://tad-lispy.gitlab.io/elm-springs/SlidingMenu.html
 [Oscillometer]: https://tad-lispy.gitlab.io/elm-springs/Oscillator.html
-[Squid game]: https://tad-lispy.gitlab.io/elm-springs/Squid.html)
+[Squid game]: https://tad-lispy.gitlab.io/elm-springs/Squid.html
