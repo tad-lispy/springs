@@ -1,16 +1,17 @@
-
 image: node:slim
-
-before_script:
-  - npm install
 
 demos:
   stage: build
+
+  before_script:
+    - npm install
 
   script:
     - scripts/build
 
   cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    policy: push
     paths:
       - demos/public
 
@@ -20,10 +21,10 @@ pages:
     - mv demos/public ./public
 
   cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    policy: pull
     paths:
       - demos/public
-    policy:
-      pull
 
   artifacts:
     paths:
