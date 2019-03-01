@@ -4,14 +4,17 @@ image: node:slim
 before_script:
   - npm install
 
-pages:
-  stage: deploy
+demos:
+  stage: build
   script:
     - scripts/build
 
+pages:
+  stage: deploy
+
   artifacts:
     paths:
-      - demos/public
+      - public
 
   only:
     - master
