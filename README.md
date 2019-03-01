@@ -2,7 +2,7 @@
 
 A rough model of a mass attached to a spring, as described by [Hooke's law](https://en.wikipedia.org/wiki/Hooke's_law). Good for making smooth and organic looking animations or modelling oscillating values (e.g. emotions). High physical accuracy is not a priority - performance and API simplicity is more important.
 
-![Logo](assets/elm-springs-logo.svg)
+![Logo](assets/elm-springs-logo.png)
 
 ## Demos
 
