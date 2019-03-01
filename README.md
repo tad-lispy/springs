@@ -77,7 +77,7 @@ Spring.create { strength = strength, dampness = dampness}
     |> Spring.jumpTo 100
 ```
 
-You can always get the current value of a spring. Most likely you will want to do it in view function. To make a button that when clicked changes it's size in a wobbly fashion, you could write a code like this:
+You can always get the current value of a spring. Most likely you will want to do it in view function. To make a button that when clicked changes its size in a wobbly fashion, you could write a code like this:
 
 ```elm
 wobblyButton : Model -> Html Msg
@@ -119,7 +119,7 @@ update msg model =
 
 This way, whenever receiving the `Click` message, `update` will change the target of the spring to 0. This will make the button eventually disappear, but first it will shrink and wobble for some time.
 
-But for it's value to actually changed over time the program needs to periodically call `Spring.animate : Float -> Spring -> Spring`. This function keeps track of the internal properties of the spring, like it's momentum. All the magic is happening there. The `animate` function is taking a `Float` number (often called *delta*) representing the amount of time that passed since previous call (it's a little bit more complex than that, see the API docs for details). The *delta* is typically a number of milliseconds and the easiest way to get it is to subscribe to `animation frame` events, like that:
+But for its value to actually change over time the program needs to periodically call `Spring.animate : Float -> Spring -> Spring`. This function keeps track of the internal properties of the spring, like its momentum. All the magic is happening there. The `animate` function is taking a `Float` number (often called *delta*) representing the amount of time that passed since previous call (it's a little bit more complex than that, see the API docs for details). The *delta* is typically a number of milliseconds and the easiest way to get it is to subscribe to `animation frame` events, like this:
 
 ```elm
 subscriptions : Model -> Sub Msg
@@ -168,13 +168,13 @@ That's really all there is to it. For inspiration take a look at example program
 
 A `Spring` value is a model of a mass attached to a spring. The spring is anchored to a moving `target`. The mass is constant (1).
 
-As the spring is animated, it's center of mass moves according to the forces acting on in and its momentum. Because the target can be moved while the mass is in motion, the spring is a good driver for animations that can smoothly transition one into another based on events that happen during the animation.
+As the spring is animated, its center of mass moves according to the forces acting on in and its momentum. Because the target can be moved while the mass is in motion, the spring is a good driver for animations that can smoothly transition one into another based on events that happen during the animation.
 
 The `value` represents the current position of the mass. It is re-calculated (together with velocity) by `animate` function and can be retrived with `value` function.
 
 The `strength` is how strongly the spring pulls toward target. It is also called the stiffness but I find the former term more intuitive.
 
-The `dampness` is how resistant the spring is to change in it's stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advise to depend on it's accuracy).
+The `dampness` is how resistant the spring is to change in its stretch (both stretching out and contracting in). If dumpness is low relative to strength, then the animation will end in long period of vibration around the target value - in other words lowering dumpness will increase wobbliness. Setting dumpness to 0 will result in something like a sine wave oscillator (but it's not advised to depend on its accuracy).
 
 Target is the value toward which the mass is pulled. Typically the spring will start in an equilibrium position (i.e. value == target) and later on (due to an event) the target will be changed and the value will follow according to the strength and dampness of the spring.
 
