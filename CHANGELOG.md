@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+
+## [1.0.5] - 2019-03-26
 ### Changed
 - Scale down the image in the ReadMe
 - Refactor `animate` to check if a spring is effectively at rest before doing any other computation

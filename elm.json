@@ -3,7 +3,7 @@
     "name": "tad-lispy/springs",
     "summary": "A rough model of a mass attached to a spring. Good for animations.",
     "license": "GPL-3.0",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "exposed-modules": [
         "Spring"
     ],
