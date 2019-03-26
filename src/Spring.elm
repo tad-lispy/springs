@@ -144,6 +144,13 @@ animate delta ((Spring this) as spring) =
         {- If it's in equilibrium, then let's just skip the whole calculation. Be lazy. -}
         spring
 
+    else if
+        (abs (this.value - this.target) < 0.05)
+            && (abs this.velocity < 0.05)
+    then
+        {- In reality the spring never stops vibrating, but at some point the vibration is lost in the background noise. In our case it's also a wasted computation. Let's just say that it is at rest already. -}
+        jumpTo this.target spring
+
     else
         let
             time =
@@ -171,21 +178,13 @@ animate delta ((Spring this) as spring) =
             newValue =
                 this.value + (velocity * time)
         in
-        if
-            (abs (this.value - this.target) < 0.05)
-                && (abs this.velocity < 0.05)
-        then
-            {- In reality the spring never stops vibrating, but at some point the vibration is lost in the background noise. In our case it's also a wasted computation. Let's just say that it is at rest already. -}
-            jumpTo this.target spring
-
-        else
-            Spring
-                { this
-                    | value =
-                        newValue
-                    , velocity =
-                        velocity
-                }
+        Spring
+            { this
+                | value =
+                    newValue
+                , velocity =
+                    velocity
+            }
 
 
 {-| Measure the current value of the spring.
