@@ -55,7 +55,33 @@ suite =
                     |> Spring.setTarget target
                     |> animate 100
                     |> Spring.value
-                    |> Expect.within (Expect.Absolute 0) target
+                    |> Expect.within (Absolute 0) target
+            )
+        , let
+            fuzzer =
+                Fuzz.map4
+                    (\strength dampness target start ->
+                        { strength = strength
+                        , dampness = dampness
+                        , target = target
+                        , start = start
+                        }
+                    )
+                    (Fuzz.floatRange 1 500)
+                    (Fuzz.floatRange 0.5 5)
+                    (Fuzz.floatRange -500 500)
+                    (Fuzz.floatRange -500 500)
+          in
+          fuzz fuzzer
+            "A spring with positive strength and dampness will eventually reach it's target"
+            (\{ strength, dampness, target, start } ->
+                { strength = strength, dampness = dampness }
+                    |> Spring.create
+                    |> Spring.jumpTo start
+                    |> Spring.setTarget target
+                    |> animate 100000
+                    |> Spring.value
+                    |> Expect.within (Absolute 0) target
             )
         ]
 
