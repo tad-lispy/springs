@@ -29,7 +29,7 @@ suite =
                     |> Spring.create
                     |> Spring.jumpTo initial
                     |> Spring.setTarget target
-                    |> Spring.animate 16
+                    |> animate 100
                     |> Spring.value
                     |> Expect.within (Absolute 0.05) initial
             )
@@ -38,8 +38,17 @@ suite =
             (\strength ->
                 { strength = strength, dampness = 0 }
                     |> Spring.create
-                    |> Spring.animate 16
+                    |> animate 100
                     |> Spring.value
                     |> Expect.equal 0
             )
         ]
+
+
+{-| A helper function to animate the spring multiple times (as if running for many animation frames)
+-}
+animate : Int -> Spring -> Spring
+animate frames spring =
+    frames
+        |> List.range 0
+        |> List.foldl (\_ s -> Spring.animate 16 s) spring
