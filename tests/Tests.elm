@@ -12,15 +12,19 @@ suite =
         [ let
             fuzzer =
                 Fuzz.map3
-                    (\dampness target initial ->
+                    (\dampness target displacement ->
                         { dampness = dampness
                         , target = target
-                        , initial = initial
+                        , initial = target + displacement
                         }
                     )
                     float
                     float
-                    float
+                    (Fuzz.oneOf
+                        [ Fuzz.floatRange -10000 -0.1
+                        , Fuzz.floatRange 0.1 10000
+                        ]
+                    )
           in
           fuzz fuzzer
             "Spring with 0 strength won't move"
@@ -30,8 +34,10 @@ suite =
                     |> Spring.jumpTo initial
                     |> Spring.setTarget target
                     |> animate 100
-                    |> Spring.value
-                    |> Expect.within (Absolute 0.05) initial
+                    |> Expect.all
+                        [ Spring.value >> Expect.within (Absolute 0) initial
+                        , Spring.atRest >> Expect.false "Spring is at rest."
+                        ]
             )
         , let
             fuzzer =
@@ -54,8 +60,10 @@ suite =
                     |> Spring.jumpTo target
                     |> Spring.setTarget target
                     |> animate 100
-                    |> Spring.value
-                    |> Expect.within (Absolute 0) target
+                    |> Expect.all
+                        [ Spring.value >> Expect.within (Absolute 0) target
+                        , Spring.atRest >> Expect.true "Spring is not at rest."
+                        ]
             )
         , let
             fuzzer =
@@ -80,8 +88,10 @@ suite =
                     |> Spring.jumpTo start
                     |> Spring.setTarget target
                     |> animate 100000
-                    |> Spring.value
-                    |> Expect.within (Absolute 0) target
+                    |> Expect.all
+                        [ Spring.value >> Expect.within (Absolute 0) target
+                        , Spring.atRest >> Expect.true "Spring is not at rest."
+                        ]
             )
         ]
 
