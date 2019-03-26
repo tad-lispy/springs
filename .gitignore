@@ -8,3 +8,4 @@ elm-stuff
 /built/
 /node_modules/
 /src/Playground.elm
+.coverage
