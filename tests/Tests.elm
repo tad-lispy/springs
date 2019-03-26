@@ -92,4 +92,4 @@ animate : Int -> Spring -> Spring
 animate frames spring =
     frames
         |> List.range 0
-        |> List.foldl (\_ s -> Spring.animate 16 s) spring
+        |> List.foldl (\_ snapshot -> Spring.animate 16 snapshot) spring
