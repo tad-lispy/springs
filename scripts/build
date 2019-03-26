@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
+# Test and coverage
+scripts/test
+
 # Build demos website
 cd demos/
 rm -rf public/
 mkdir -p public/
+cp ../.coverage/coverage.html public/
 
 for input in src/Examples/*.elm
 do

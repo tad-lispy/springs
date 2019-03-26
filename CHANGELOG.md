@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Scale down the image in the ReadMe
+### Added
+- Unit tests and coverage report
 
 ## [1.0.4] - 2019-03-01
 ### Changed
