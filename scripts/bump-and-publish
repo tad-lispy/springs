@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+# To make it work on OSX (provided gnu-sed in installed)
+if type gsed
+then
+  sed=gsed
+fi
+
+
 git diff-index --quiet HEAD -- \
   || (echo "There are uncommited changes. Aborting." ; exit 1)
 
@@ -11,9 +18,9 @@ elm bump
 version=$(jq --raw-output ' .version ' "elm.json")
 date=$(date +%Y-%m-%d)
 
-sed \
+$sed \
   --regexp-extended \
-  --in-place \
+  --in-place="" \
   "s$^## \[Unreleased\]$\## [Unreleased\]\n\n\n## [${version}] - ${date}$" \
   CHANGELOG.md
 
