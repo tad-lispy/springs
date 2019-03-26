@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
+# Test and coverage
+scripts/test
+
 # Build demos website
 cd demos/
 rm -rf public/
 mkdir -p public/
+cp ../.coverage/coverage.html public/
 
 for input in src/Examples/*.elm
 do
@@ -15,7 +19,7 @@ do
 
   # Insert Viewport meta tag for better mobile experience
   tag='<meta name="viewport" content="width=device-width, initial-scale=0.75">'
-  sed -i "s|</head>|  ${tag}\n</head>|" "${output}"
+  sed -i "" "s|</head>|  ${tag}\n</head>|" "${output}"
 done
 
 cp index.html public/
