@@ -33,14 +33,29 @@ suite =
                     |> Spring.value
                     |> Expect.within (Absolute 0.05) initial
             )
-        , fuzz float
+        , let
+            fuzzer =
+                Fuzz.map3
+                    (\strength dampness target ->
+                        { strength = strength
+                        , dampness = dampness
+                        , target = target
+                        }
+                    )
+                    float
+                    float
+                    float
+          in
+          fuzz fuzzer
             "Spring at rest won't move"
-            (\strength ->
-                { strength = strength, dampness = 0 }
+            (\{ strength, dampness, target } ->
+                { strength = strength, dampness = dampness }
                     |> Spring.create
+                    |> Spring.jumpTo target
+                    |> Spring.setTarget target
                     |> animate 100
                     |> Spring.value
-                    |> Expect.equal 0
+                    |> Expect.within (Expect.Absolute 0) target
             )
         ]
 
